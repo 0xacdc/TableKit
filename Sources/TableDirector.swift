@@ -327,6 +327,11 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
     
     open func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         invoke(action: .move, cell: tableView.cellForRow(at: sourceIndexPath), indexPath: sourceIndexPath, userInfo: [TableKitUserInfoKeys.CellMoveDestinationIndexPath: destinationIndexPath])
+        
+        let rowToMove = sections[sourceIndexPath.section].rows[sourceIndexPath.row]
+        
+        sections[sourceIndexPath.section].remove(rowAt: sourceIndexPath.row)
+        sections[destinationIndexPath.section].insert(row: rowToMove, at: destinationIndexPath.row)
     }
 }
 
