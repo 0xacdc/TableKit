@@ -318,6 +318,11 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
     open func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             invoke(action: .clickDelete, cell: tableView.cellForRow(at: indexPath), indexPath: indexPath)
+            
+            let section = sections[indexPath.section]
+            
+            section.remove(rowAt: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .none)
         }
     }
     
