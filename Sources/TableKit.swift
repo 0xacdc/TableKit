@@ -76,6 +76,7 @@ public enum TableRowActionType {
     case canEdit
     case configure
     case canDelete
+    case canCheck
     case canMove
     case canMoveTo
     case move

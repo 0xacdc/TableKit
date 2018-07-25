@@ -304,6 +304,10 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
             return UITableViewCellEditingStyle.delete
         }
         
+        if invoke(action: .canCheck, cell: tableView.cellForRow(at: indexPath), indexPath: indexPath) as? Bool ?? false {
+            return UITableViewCellEditingStyle(rawValue: 3) ?? UITableViewCellEditingStyle.none
+        }
+        
         return UITableViewCellEditingStyle.none
     }
     
