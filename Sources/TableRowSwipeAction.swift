@@ -1,6 +1,6 @@
 import UIKit
 
-public typealias SwipeActionHandler = (RowSwipeAction, IndexPath) -> Void
+public typealias SwipeActionHandler = (RowSwipeAction) -> Void
 
 protocol ContextualActionProtocol {
     var title: String? { get }
@@ -14,7 +14,7 @@ public class RowSwipeAction: ContextualActionProtocol {
     var image: UIImage?
     let handler: SwipeActionHandler
     
-    init(style: Style, title: String? = nil, backgroundColor: UIColor? = nil, image: UIImage? = nil, handler: @escaping SwipeActionHandler) {
+    public init(style: Style, title: String? = nil, backgroundColor: UIColor? = nil, image: UIImage? = nil, handler: @escaping SwipeActionHandler) {
         self.style = style
         self.title = title
         self.backgroundColor = backgroundColor
@@ -22,20 +22,20 @@ public class RowSwipeAction: ContextualActionProtocol {
         self.handler = handler
     }
     
-    func contextualAction(indexPath: IndexPath) -> ContextualActionProtocol {
+    func contextualAction() -> ContextualActionProtocol {
         var action: ContextualActionProtocol
         
         if #available(iOS 11, *) {
-            action = UIContextualAction(style: self.style.contextualActionStyle, title: self.title, handler: { [weak self] (contextualAction, view, completion) in
+            action = UIContextualAction(style: self.style.contextualActionStyle, title: self.title, handler: { [weak self] (_, _, completion) in
                 if let `self` = self {
-                    self.handler(self, indexPath)
+                    self.handler(self)
                     completion(true)
                 }
             })
         } else {
-            action = UITableViewRowAction(style: self.style.actionStyle, title: self.title, handler: { [weak self] (rowAction, indexPath) in
+            action = UITableViewRowAction(style: self.style.actionStyle, title: self.title, handler: { [weak self] (_, _) in
                 if let `self` = self {
-                    self.handler(self, indexPath)
+                    self.handler(self)
                 }
             })
         }
@@ -80,17 +80,15 @@ public class RowSwipeAction: ContextualActionProtocol {
 
 public struct RowSwipeConfiguration {
     private let swipeActions: [RowSwipeAction]
-    public let indexPath: IndexPath
     public let performsActionWithFullSwipe: Bool
     
-    init(indexPath: IndexPath, actions: [RowSwipeAction], performsActionWithFullSwipe: Bool = false) {
-        self.indexPath = indexPath
+    init(actions: [RowSwipeAction], performsActionWithFullSwipe: Bool = false) {
         self.swipeActions = actions
         self.performsActionWithFullSwipe = performsActionWithFullSwipe
     }
     
     var actions: [ContextualActionProtocol]{
-        return self.swipeActions.map { $0.contextualAction(indexPath: self.indexPath) }
+        return self.swipeActions.map { $0.contextualAction() }
     }
 }
 
