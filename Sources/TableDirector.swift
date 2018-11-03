@@ -355,7 +355,7 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
         let resultConfiguration = UISwipeActionsConfiguration(actions: actions)
         resultConfiguration.performsFirstActionWithFullSwipe = swipeConfiguration.performsActionWithFullSwipe
         
-        return UISwipeActionsConfiguration(actions: actions)
+        return resultConfiguration
     }
 }
 
