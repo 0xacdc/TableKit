@@ -82,7 +82,7 @@ public struct RowSwipeConfiguration {
     private let swipeActions: [RowSwipeAction]
     public let performsActionWithFullSwipe: Bool
     
-    init(actions: [RowSwipeAction], performsActionWithFullSwipe: Bool = false) {
+    public init(actions: [RowSwipeAction], performsActionWithFullSwipe: Bool = false) {
         self.swipeActions = actions
         self.performsActionWithFullSwipe = performsActionWithFullSwipe
     }
