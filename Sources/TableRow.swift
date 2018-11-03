@@ -24,7 +24,7 @@ open class TableRow<CellType: ConfigurableCell>: Row where CellType: UITableView
     
     open let item: CellType.T
     private lazy var actions = [String: [TableRowAction<CellType>]]()
-    private(set) open var editingActions: [UITableViewRowAction]?
+    private(set) open var editingSwipeConfiguration: RowSwipeConfiguration?
     
     open var hashValue: Int {
         return ObjectIdentifier(self).hashValue
@@ -46,10 +46,10 @@ open class TableRow<CellType: ConfigurableCell>: Row where CellType: UITableView
         return CellType.self
     }
     
-    public init(item: CellType.T, actions: [TableRowAction<CellType>]? = nil, editingActions: [UITableViewRowAction]? = nil) {
+    public init(item: CellType.T, actions: [TableRowAction<CellType>]? = nil, editingSwipeConfiguration: RowSwipeConfiguration? = nil) {
         
         self.item = item
-        self.editingActions = editingActions
+        self.editingSwipeConfiguration = editingSwipeConfiguration
         actions?.forEach { on($0) }
     }
     
@@ -77,7 +77,7 @@ open class TableRow<CellType: ConfigurableCell>: Row where CellType: UITableView
         if actions[TableRowActionType.canEdit.key] != nil {
             return invoke(action: .canEdit, cell: nil, path: indexPath) as? Bool ?? false
         }
-        return editingActions?.isEmpty == false || actions[TableRowActionType.clickDelete.key] != nil
+        return editingSwipeConfiguration?.actions.isEmpty == false || actions[TableRowActionType.clickDelete.key] != nil
     }
     
     // MARK: - actions -

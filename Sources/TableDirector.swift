@@ -296,7 +296,7 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
     }
     
     open func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return sections[indexPath.section].rows[indexPath.row].editingActions
+        return sections[indexPath.section].rows[indexPath.row].editingSwipeConfiguration?.actions as? [UITableViewRowAction]
     }
     
     open func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -341,6 +341,21 @@ open class TableDirector: NSObject, UITableViewDataSource, UITableViewDelegate {
         
         sections[sourceIndexPath.section].remove(rowAt: sourceIndexPath.row)
         sections[destinationIndexPath.section].insert(row: rowToMove, at: destinationIndexPath.row)
+    }
+    
+    @available(iOS 11.0, *)
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard
+            let swipeConfiguration = sections[indexPath.section].rows[indexPath.row].editingSwipeConfiguration,
+            let actions = swipeConfiguration.actions as? [UIContextualAction], !actions.isEmpty
+        else {
+            return nil
+        }
+        
+        let resultConfiguration = UISwipeActionsConfiguration(actions: actions)
+        resultConfiguration.performsFirstActionWithFullSwipe = swipeConfiguration.performsActionWithFullSwipe
+        
+        return UISwipeActionsConfiguration(actions: actions)
     }
 }
 

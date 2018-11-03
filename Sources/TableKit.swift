@@ -36,7 +36,7 @@ public protocol RowConfigurable {
 
 public protocol RowActionable {
     
-    var editingActions: [UITableViewRowAction]? { get }
+    var editingSwipeConfiguration: RowSwipeConfiguration? { get }
     func isEditingAllowed(forIndexPath indexPath: IndexPath) -> Bool
 
     func invoke(
