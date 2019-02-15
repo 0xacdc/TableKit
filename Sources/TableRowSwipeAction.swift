@@ -4,21 +4,22 @@ public typealias SwipeActionHandler = (RowSwipeAction) -> Void
 
 protocol ContextualActionProtocol {
     var title: String? { get }
-    var backgroundColor: UIColor? { get set }
-    var image: UIImage? { get set }
+    var actionBackgroundColor: UIColor? { get set }
+    var actionImage: UIImage? { get set }
 }
+
 public class RowSwipeAction: ContextualActionProtocol {
     let style: Style
-    let title: String?
-    var backgroundColor: UIColor?
-    var image: UIImage?
+    var title: String?
+    var actionBackgroundColor: UIColor?
+    var actionImage: UIImage?
     let handler: SwipeActionHandler
     
     public init(style: Style, title: String? = nil, backgroundColor: UIColor? = nil, image: UIImage? = nil, handler: @escaping SwipeActionHandler) {
         self.style = style
         self.title = title
-        self.backgroundColor = backgroundColor
-        self.image = image
+        self.actionBackgroundColor = backgroundColor
+        self.actionImage = image
         self.handler = handler
     }
     
@@ -40,12 +41,12 @@ public class RowSwipeAction: ContextualActionProtocol {
             })
         }
         
-        if let color = self.backgroundColor {
-            action.backgroundColor = color
+        if let color = self.actionBackgroundColor {
+            action.actionBackgroundColor = color
         }
         
-        if let image = self.image {
-            action.image = image
+        if let image = self.actionImage {
+            action.actionImage = image
         }
         
         return action
@@ -66,13 +67,13 @@ public class RowSwipeAction: ContextualActionProtocol {
             }
         }
         
-        var actionStyle: UITableViewRowActionStyle {
+        var actionStyle: UITableViewRowAction.Style {
             switch self{
                 case .normal:
-                    return UITableViewRowActionStyle.normal
+                    return UITableViewRowAction.Style.normal
                 
                 case .destructive:
-                    return UITableViewRowActionStyle.destructive
+                    return UITableViewRowAction.Style.destructive
             }
         }
     }
@@ -93,7 +94,17 @@ public struct RowSwipeConfiguration {
 }
 
 extension UITableViewRowAction: ContextualActionProtocol {
-    var image: UIImage? {
+    var actionBackgroundColor: UIColor? {
+        get {
+            return self.backgroundColor
+        }
+        
+        set {
+            self.backgroundColor = self.actionBackgroundColor
+        }
+    }
+    
+    var actionImage: UIImage? {
         get {
             return nil
         }
@@ -103,10 +114,32 @@ extension UITableViewRowAction: ContextualActionProtocol {
 }
 
 @available(iOS 11.0, *)
-extension UIContextualAction: ContextualActionProtocol {}
+extension UIContextualAction: ContextualActionProtocol {
+    var actionBackgroundColor: UIColor? {
+        get {
+            return self.backgroundColor
+        }
+        
+        set {
+            if let color = actionBackgroundColor {
+                self.backgroundColor = color
+            }
+        }
+    }
+    
+    var actionImage: UIImage? {
+        get {
+            return self.image
+        }
+        
+        set {
+            self.image = self.actionImage
+        }
+    }
+}
 
 public protocol ContextualStyle {}
-extension UITableViewRowActionStyle: ContextualStyle {}
+extension UITableViewRowAction.Style: ContextualStyle {}
 
 @available(iOS 11.0, *)
 extension UIContextualAction.Style: ContextualStyle {}
