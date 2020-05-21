@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
     s.license               = { :type => 'MIT', :file => 'LICENSE' }
     s.platforms             = { :ios => '8.0' }
     s.ios.deployment_target = '8.0'
+    s.osx.deployment_target = '10.15' #Catalyst
 
     s.source_files          = 'Sources/*.swift'
     s.source                = { :git => 'https://github.com/maxsokolov/TableKit.git', :tag => s.version }
